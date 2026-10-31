@@ -13,12 +13,12 @@ export const googleAuth = async (req,res) => {
             })
         }
         let token = await genToken(user._id)
-        res.cookie("token" , token , {
-            http:true,
-            secure:false,
-            sameSite:"strict",
-            maxAge:7 * 24 * 60 * 60 * 1000
-        })
+        res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000
+});
 
         return res.status(200).json(user)
 
@@ -32,8 +32,14 @@ export const googleAuth = async (req,res) => {
 
 export const logOut = async (req,res) => {
     try {
-        await res.clearCookie("token")
-        return res.status(200).json({message:"LogOut Successfully"})
+        // await res.clearCookie("token")
+        // return res.status(200).json({message:"LogOut Successfully"})
+
+        res.clearCookie("token", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "none" : "lax"
+});
     } catch (error) {
          return res.status(500).json({message:`Logout error ${error}`})
     }
