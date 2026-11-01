@@ -12,10 +12,13 @@ import paymentRouter from "./routes/payment.route.js"
 const app = express()
 app.set("trust proxy", 1)
 
- app.use(cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true
-  }));
+app.use(cors({
+  origin: [
+    "http://localhost:5173",
+    "https://interview-iq-q33a.vercel.app"
+  ],
+  credentials: true
+}));
 
 app.use(express.json())
 app.use(cookieParser())
